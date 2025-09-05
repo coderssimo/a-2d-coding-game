@@ -8,7 +8,7 @@ export default class GameScene extends Phaser.Scene {
       frameWidth: 1200, frameHeight: 558
     });
 
-    // Idle sheet (set frame sizes to your real values)
+    // Idle sheet 
     this.load.spritesheet('player', 'assets/2B_idle-Sheet.png', {
       frameWidth: 128, frameHeight: 128
     });
@@ -25,7 +25,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // Background anim + sprite
+    // Background anim 
     this.anims.create({
       key: 'bg-anim',
       frames: this.anims.generateFrameNumbers('background', { start: 0, end: 5 }),
@@ -38,17 +38,18 @@ export default class GameScene extends Phaser.Scene {
     // Create player once
     this.player = this.physics.add.sprite(100, 400, 'player');
     this.player.setScale(1.2).setCollideWorldBounds(true);
+    this.player.setOrigin(0.5, 1);
     this.player.health = 1140
     this.player.maxHealth = 100;
 
     // Pod 
     this.pod = this.physics.add.sprite(300, 450, 'pod').setScale(3).setCollideWorldBounds(true);
 
-    //  Create animations and input
+    
     this.setupPlayerAnimations();
     this.setupPlayerMovement();
 
-    //  Start idle
+    //  Play idle
     this.player.play('player-idle');
   }
 
@@ -86,17 +87,24 @@ export default class GameScene extends Phaser.Scene {
     this.player.setVelocityX(0);
 
     if (this.cursors.left.isDown || this.wasd.A.isDown) {
-      this.player.setVelocityX(-200);
+      this.player.setVelocityX(-250);
       this.player.play('player-walk', true);
       this.player.flipX = true;
     } else if (this.cursors.right.isDown || this.wasd.D.isDown) {
-      this.player.setVelocityX(200);
+      this.player.setVelocityX(250);
       this.player.play('player-walk', true);
       this.player.flipX = false;
     } else {
       this.player.play('player-idle', true);
     }
-
     
+     if (this.player.anims.currentAnim) {
+    if (this.player.anims.currentAnim.key === 'player-idle') {
+      this.player.setScale(1.1); 
+    } else if (this.player.anims.currentAnim.key === 'player-walk') {
+      this.player.setScale(1.2); 
+    }
+  }
+  
   }
 }
