@@ -25,7 +25,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // Background anim 
+    // Background anim (temporary)
     this.anims.create({
       key: 'bg-anim',
       frames: this.anims.generateFrameNumbers('background', { start: 0, end: 5 }),
