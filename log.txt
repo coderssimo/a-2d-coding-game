@@ -1,0 +1,3 @@
+game mechanic: sword slashes
+1:a stationary slash (more damage obv but at the cost of timing) // kills sucide robots in one hit?
+2:a slash attck that you can perform while moving
