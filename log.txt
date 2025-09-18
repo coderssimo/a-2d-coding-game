@@ -1,3 +1,64 @@
 game mechanic: sword slashes
 1:a stationary slash (more damage obv but at the cost of timing) // kills sucide robots in one hit?
 2:a slash attck that you can perform while moving
+// enemy.js
+export default class Enemy extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y, texture) {
+        super(scene, x, y, texture);
+
+        // Add enemy to scene + physics
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+
+        this.setCollideWorldBounds(true); // stop at edges
+
+        // Enemy properties
+        this.speed = 80;       // left/right movement speed
+        this.hp = 100;
+        this.attackRange = 40; // how close before attacking
+        this.chaseRange = 200; // how far enemy starts chasing
+    }
+
+    update(player) {
+        if (!player) return;
+
+        // Horizontal distance only (ignore Y)
+        const distanceX = player.x - this.x;
+        const absDistanceX = Math.abs(distanceX);
+
+        if (absDistanceX < this.chaseRange && absDistanceX > this.attackRange) {
+            // Chase player left or right
+            if (distanceX > 0) {
+                this.setVelocityX(this.speed); // move right
+            } else {
+                this.setVelocityX(-this.speed); // move left
+            }
+        } 
+        else if (absDistanceX <= this.attackRange) {
+            // Stop + attack
+            this.setVelocityX(0);
+            this.attack(player);
+        } 
+        else {
+            // Idle if player is far
+            this.setVelocityX(0);
+        }
+    }
+
+    attack(player) {
+        // Simple attack: reduce player HP
+        if (player.hp !== undefined) {
+            player.hp -= 1;
+            console.log("Enemy attacked! Player HP:", player.hp);
+        }
+    }
+
+    takeDamage(amount) {
+        this.hp -= amount;
+        console.log("Enemy HP:", this.hp);
+
+        if (this.hp <= 0) {
+            this.destroy();
+        }
+    }
+}
